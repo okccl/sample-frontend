@@ -1,16 +1,60 @@
-# React + Vite
+# sample-frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Platform Engineering portfolio — サンプルアプリケーション（フロントエンド）
 
-Currently, two official plugins are available:
+## 概要
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Helm Library Chart（`common-app`）と Golden Path CI/CD の動作確認用サンプルフロントエンド。  
+React + Vite で構成し、本番コンテナは nginx で静的ファイルを配信する。
 
-## React Compiler
+このリポジトリは「アプリ開発者がプラットフォームをどう使うか」を示すことを目的としており、
+アプリ自体の機能よりも **CI/CD パイプラインと Helm 統合** に焦点を当てている。
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## このリポジトリが示すもの
 
-## Expanding the ESLint configuration
+| Phase | 内容 |
+|-------|------|
+| Phase 5 | `common-app` Library Chart を使い、最小限の `values.yaml` だけでデプロイ定義が完結することを示す |
+| Phase 6 | `main` へのpushで自動的にイメージビルド → GHCR プッシュ → `platform-gitops` への通知まで完結する Golden Path |
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## ディレクトリ構成
+
+```
+sample-frontend/
+├── .github/workflows/
+│   ├── build.yaml            # CI: イメージビルド & GHCR プッシュ
+│   └── update-gitops.yaml    # CD: platform-gitops への image tag 更新通知
+├── src/                      # React アプリケーション
+├── public/
+├── nginx.conf                # 本番コンテナ用 nginx 設定
+└── Dockerfile
+```
+
+> デプロイ定義（Helm values / ArgoCD Application）は `platform-gitops/apps/sample-frontend/` で管理。
+
+## CI/CD フロー
+
+```
+push to main
+  └─► build.yaml
+        ├─ Docker イメージをビルド（タグ: git SHA short）
+        ├─ GHCR (ghcr.io/okccl/sample-frontend) にプッシュ
+        └─► update-gitops.yaml
+              └─► platform-gitops に repository_dispatch を送信
+                    └─► ArgoCD が新しいイメージタグで自動同期
+```
+
+## ローカル開発
+
+```bash
+npm install
+npm run dev
+# → http://localhost:5173
+```
+
+## 関連リポジトリ
+
+| リポジトリ | 役割 |
+|---|---|
+| [`platform-gitops`](https://github.com/okccl/platform-gitops) | このサービスの Helm values / ArgoCD Application を管理 |
+| [`platform-charts`](https://github.com/okccl/platform-charts) | デプロイに使用する `common-app` Library Chart を提供 |
