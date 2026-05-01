@@ -15,7 +15,7 @@ React + Vite で構成し、本番コンテナは nginx で静的ファイルを
 | Phase | 内容 |
 |-------|------|
 | Phase 5 | `common-app` Library Chart を使い、最小限の `values.yaml` だけでデプロイ定義が完結することを示す |
-| Phase 6 | `main` へのpushで自動的にイメージビルド → GHCR プッシュ → `platform-gitops` への通知まで完結する Golden Path |
+| Phase 6 | `main` へのpushで自動的にイメージビルド → GHCR プッシュ → `platform-gitops` への PR 作成 → squash merge まで完結する Golden Path |
 
 ## ディレクトリ構成
 
@@ -23,7 +23,7 @@ React + Vite で構成し、本番コンテナは nginx で静的ファイルを
 sample-frontend/
 ├── .github/workflows/
 │   ├── build.yaml            # CI: イメージビルド & GHCR プッシュ
-│   └── update-gitops.yaml    # CD: platform-gitops への image tag 更新通知
+│   └── update-gitops.yaml    # CD: platform-gitops への image tag 更新通知（PR 方式）
 ├── src/                      # React アプリケーション
 ├── public/
 ├── nginx.conf                # 本番コンテナ用 nginx 設定
@@ -41,7 +41,9 @@ push to main
         ├─ GHCR (ghcr.io/okccl/sample-frontend) にプッシュ
         └─► update-gitops.yaml
               └─► platform-gitops に repository_dispatch を送信
-                    └─► ArgoCD が新しいイメージタグで自動同期
+                    └─► gitops/update-sample-frontend-{tag} ブランチを作成
+                          └─► PR 作成 → squash merge → ブランチ自動削除
+                                └─► ArgoCD が新しいイメージタグで自動同期
 ```
 
 ## ローカル開発
