@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sample-frontend
+  description: React + Vite によるサンプル SPA
+  annotations:
+    github.com/project-slug: okccl/sample-frontend
+  tags:
+    - react
+    - vite
+    - typescript
+spec:
+  type: website
+  lifecycle: experimental
+  owner: user:platform-admin
+  system: platform
