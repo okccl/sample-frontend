@@ -23,7 +23,7 @@ jobs:
       - name: platform-gitopsのチェックアウト
         uses: actions/checkout@v4
         with:
-          repository: okccl/platform-gitops
+          repository: ccl-labs/platform-gitops
           token: ${{ secrets.GITOPS_TOKEN }}
       - name: imageの更新
         run: |
