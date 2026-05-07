@@ -38,7 +38,7 @@ sample-frontend/
 push to main
   └─► build.yaml
         ├─ Docker イメージをビルド（タグ: git SHA short）
-        ├─ GHCR (ghcr.io/okccl/sample-frontend) にプッシュ
+        ├─ GHCR (ghcr.io/ccl-labs/sample-frontend) にプッシュ
         └─► update-gitops.yaml
               └─► platform-gitops に repository_dispatch を送信
                     └─► gitops/update-sample-frontend-{tag} ブランチを作成
@@ -58,5 +58,5 @@ npm run dev
 
 | リポジトリ | 役割 |
 |---|---|
-| [`platform-gitops`](https://github.com/okccl/platform-gitops) | このサービスの Helm values / ArgoCD Application を管理 |
-| [`platform-charts`](https://github.com/okccl/platform-charts) | デプロイに使用する `common-app` Library Chart を提供 |
+| [`platform-gitops`](https://github.com/ccl-labs/platform-gitops) | このサービスの Helm values / ArgoCD Application を管理 |
+| [`platform-charts`](https://github.com/ccl-labs/platform-charts) | デプロイに使用する `common-app` Library Chart を提供 |
