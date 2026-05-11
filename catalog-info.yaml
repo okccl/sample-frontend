@@ -4,7 +4,7 @@ metadata:
   name: sample-frontend
   description: React + Vite によるサンプル SPA
   annotations:
-    github.com/project-slug: ccl-labs/sample-frontend
+    github.com/project-slug: okccl/sample-frontend
   tags:
     - react
     - vite
